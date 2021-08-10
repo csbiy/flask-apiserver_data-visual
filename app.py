@@ -7,10 +7,7 @@ from plotnine import *
 import sys, base64
 app = Flask(__name__);
 CORS(app);
-@app.route("/",methods=["GET"])
-def testRouter():
-    print("request")
-    return "hello";
+
 @app.route("/",methods = ["POST"])
 def dataProcess():
     tgiData = request.json['data'];
@@ -28,13 +25,12 @@ def dataProcess():
         })],axis=0)
     df = df.astype({"group":"category","time":"int64"});
     df['group'].cat.reorder_categories(groupSet,inplace=True);
-    p = ggplot(df, aes(x="time", y="tumorSize",color="group",group="group")) + geom_smooth() + ylab("Tumor Size(mm^3)") + xlab("Days after inoculation") + ggtitle("Standard Growth Curve") + facet_wrap('~group')  +  scale_color_manual(values =  colorSet) + theme(figure_size=(12, 7));
+    p = ggplot(df, aes(x="time", y="tumorSize",color="group",group="group")) + geom_smooth(method="lowess") + ylab("Tumor Size(mm^3)") + xlab("Days after inoculation") + facet_wrap('~group')  +  scale_color_manual(values =  colorSet) + theme(figure_size=(12, 7));
 
-    ggplot.save(p,filename="standard.png",path=".")
-    with open("standard.png","rb") as standardImg:
+    ggplot.save(p,filename="./cache/standard.png",dpi=300,path=".",limitsize=True) 
+    with open("./cache/Standard.png","rb") as standardImg:
         encodedImg = base64.b64encode(standardImg.read())
         return encodedImg;
     
 if __name__ == "__main__":
-    print("server executed!!"); 
     app.run( host="172.25.113.131" , port = 5500, debug=True )
