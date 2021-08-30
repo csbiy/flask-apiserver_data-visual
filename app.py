@@ -26,7 +26,7 @@ def dataProcess():
     df = df.astype({"group":"category","time":"int64"});
     df['group'].cat.reorder_categories(groupSet,inplace=True);
     p = ggplot(df, aes(x="time", y="tumorSize",color="group",group="group")) + geom_smooth(method="lowess") + ylab("Tumor Size(mm^3)") + xlab("Days after inoculation") + facet_wrap('~group')  +  scale_color_manual(values =  colorSet) + theme(figure_size=(12, 7));
-
+    ## data visulization plot 
     ggplot.save(p,filename="./cache/standard.png",dpi=300,path=".",limitsize=True) 
     with open("./cache/Standard.png","rb") as standardImg:
         encodedImg = base64.b64encode(standardImg.read())
