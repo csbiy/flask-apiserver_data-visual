@@ -33,4 +33,4 @@ def dataProcess():
         return encodedImg;
     
 if __name__ == "__main__":
-    app.run( host="172.25.113.131" , port = 5500, debug=True )
+    app.run( host="172.25.113.131" , port = 5500)
